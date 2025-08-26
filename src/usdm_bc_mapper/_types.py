@@ -17,17 +17,21 @@ class CdiscBcSearch(BaseModel):
     query: str
     k: int = 10
 
+
 class FinalAnswer(BaseModel):
     type: Literal["FinalAnswer"] = "FinalAnswer"
     biomedical_concept_id: str
     confidence: PositiveInt
 
+
 class NotFoundAnswer(BaseModel):
     type: Literal["NotFoundAnswer"] = "NotFoundAnswer"
+
 
 class NciSearch(BaseModel):
     type: Literal["NciSearch"] = "NciSearch"
     hukka: str
+
 
 class LLmResponse(BaseModel):
     analysis: str

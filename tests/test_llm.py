@@ -37,7 +37,8 @@ Give your analysis, supporting your decision to choose the specific bio-medical 
     output = await llm(
         history=History.model_validate([
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": "Blood Pressure"}]),
+            {"role": "user", "content": "Blood Pressure"},
+        ]),
         output_model=BioMedicalConceptOutput,
     )
 
@@ -46,4 +47,3 @@ Give your analysis, supporting your decision to choose the specific bio-medical 
     assert output.concept_id == "C54706"
     assert output.analysis is not None
     assert len(output.analysis) > 0
-

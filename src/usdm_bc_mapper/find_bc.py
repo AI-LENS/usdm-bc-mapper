@@ -1,6 +1,5 @@
 import logging
 
-
 from usdm_bc_mapper._types import (
     CdiscBcSearch,
     FinalAnswer,
@@ -13,7 +12,6 @@ from usdm_bc_mapper._types import (
 from usdm_bc_mapper.cdisc_bc_search import CdiscBcIndex
 from usdm_bc_mapper.llm import llm
 from usdm_bc_mapper.settings import settings
-
 
 logger = logging.getLogger(__name__)
 
