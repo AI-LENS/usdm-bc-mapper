@@ -59,6 +59,5 @@ async def find_biomedical_concept(concept: str):
         attempts += 1
 
     if attempts >= settings.max_ai_lookup_attempts:
-        print("Max attempts reached")
-        return
-    print(response.model_dump_json(indent=2))
+        raise RuntimeError("Max attempts reached")
+    return response.decision
