@@ -3,14 +3,15 @@ from typing import Type
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 
-from usdm_bc_mapper._types import History
+from ._types import History
+from .settings import settings
 
-client = AsyncOpenAI()  # set OPENAI_API_KEY environment variable
+client = AsyncOpenAI(api_key=settings.openai_api_key)
 
 
 async def llm[T: BaseModel](history: History, output_model: Type[T]) -> T:
     response = await client.responses.parse(
-        model="gpt-5-mini",
+        model=settings.openai_model,
         input=[
             *history.model_dump(),
         ],
