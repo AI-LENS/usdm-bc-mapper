@@ -1,0 +1,40 @@
+[project]
+name = "usdm-bc-mapper"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "pritam-dey3", email = "pritam.pritamdey.984@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "bm25s>=0.2.13",
+    "cyclopts>=3.23.0",
+    "jinja2>=3.1.6",
+    "openai>=1.101.0",
+    "pandas>=2.3.2",
+    "pydantic-settings>=2.10.1",
+    "pystemmer>=3.0.0",
+]
+
+[project.scripts]
+bcm = "usdm_bc_mapper:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/usdm_bc_mapper/data" = "usdm_bc_mapper/data"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.4.1",
+  "pytest-asyncio>=0.23.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = [
+  ".",
+]
