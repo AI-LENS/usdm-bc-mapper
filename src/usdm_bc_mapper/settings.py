@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     openai_base_url: str = "https://api.openai.com/v1"
 
     data_path: FilePath = project_root / "data/cdisc_biomedical_concepts_latest.csv"
+    dataset_specialization_path: FilePath = project_root / "data/cdisc_sdtm_dataset_specializations_latest.csv"
     data_search_cols: list[str] = [
         "short_name",
         "bc_categories",
