@@ -6,16 +6,18 @@ from pydantic import BaseModel
 from ._types import History
 from .settings import settings
 
-client = AsyncOpenAI(api_key=settings.openai_api_key)
+# Assume providers is imported or defined elsewhere in the module
 
 
-async def llm[T: BaseModel](history: History, output_model: Type[T]) -> T:
-    response = await client.responses.parse(
-        model=settings.openai_model,
-        input=[
-            *history.model_dump(),
-        ],
-        text_format=output_model,
+async def llm[T: BaseModel](history: History, schema: Type[T]) -> T:
+    client = AsyncOpenAI(
+        base_url=settings.openai_base_url, api_key=settings.openai_api_key
     )
-    assert response.output_parsed is not None, "Failed to parse response from LLM"
-    return response.output_parsed
+    response = await client.beta.chat.completions.parse(
+        model=settings.openai_model,
+        messages=history.model_dump(),
+        response_format=schema,
+    )
+
+    assert response.choices[0].message.parsed is not None, "Response parsing failed"
+    return response.choices[0].message.parsed

@@ -1,7 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, RootModel
-from pydantic.types import PositiveInt
+from pydantic import BaseModel, Field, RootModel
 
 
 class Message(BaseModel):
@@ -20,8 +19,8 @@ class CdiscBcSearch(BaseModel):
 
 class FinalAnswer(BaseModel):
     type: Literal["FinalAnswer"] = "FinalAnswer"
-    biomedical_concept_id: str
-    confidence: PositiveInt
+    vlm_group_id: str
+    confidence: int = Field(..., ge=0, le=100)
 
 
 class NotFoundAnswer(BaseModel):

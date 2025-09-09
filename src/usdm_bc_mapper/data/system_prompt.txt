@@ -27,15 +27,15 @@ Use this when you've found the best matching biomedical concept.
 ```json
 {
   "type": "FinalAnswer",
-  "biomedical_concept_id": "C123456",
+  "vlm_group_id": "MEDHISTFREE",
   "confidence": 0.95
 }
 ```
-- **biomedical_concept_id**: The CDISC bc_id (e.g., "C127127")
+- **vlm_group_id**: The CDISC vlm_group_id (e.g., "MEDHISTFREE", "PCONFIND")
 - **confidence**: Your confidence level (0 to 100)
 
 ## Search Strategy
-1. **Start broad**: Search for the main concept first
+1. **Start simple**: Search for the main concept first
 2. **Refine iteratively**: Use synonyms, related terms, or more specific terminology
 3. **Analyze results**: Look at short_name, bc_categories, synonyms, and definition fields
 4. **Consider alternatives**: Try different medical terminology if initial searches don't yield good results

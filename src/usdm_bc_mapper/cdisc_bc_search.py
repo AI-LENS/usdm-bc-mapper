@@ -1,7 +1,7 @@
-from typing import Literal, TypedDict, overload
+from typing import Any, Literal, TypedDict, overload
 
 import bm25s
-import pandas as pd
+import polars as pl
 import Stemmer
 from jinja2 import Template
 
@@ -20,47 +20,34 @@ class Document(TypedDict):
     metadata: DocumentMetadata
 
 
-def build_retriever() -> tuple[bm25s.BM25, pd.DataFrame]:
-    df = pd.read_csv(settings.data_path / "cdisc_biomedical_concepts_latest.csv")
-    df = df.drop_duplicates(
-        subset=["bc_id", "short_name", "bc_categories", "synonyms", "definition"]
-    ).reset_index(drop=True)
-    specialization_df = pd.read_csv(
+def build_data() -> pl.DataFrame:
+    bc_concepts = pl.scan_csv(
+        settings.data_path / "cdisc_biomedical_concepts_latest.csv"
+    )
+    bc_concepts = bc_concepts.select(
+        "bc_id", "short_name", "bc_categories", "synonyms", "definition"
+    ).unique()
+    specialization_df = pl.scan_csv(
         settings.data_path / "cdisc_sdtm_dataset_specializations_latest.csv"
     )
-    specialization_df = (
-        specialization_df[["bc_id", "short_name", "vlm_group_id"]]
-        .drop_duplicates()
-        .reset_index(drop=True)
-    )
-    df = pd.merge(specialization_df, df, on="bc_id", how="left", suffixes=("", "_bc"))
-    df = df.drop_duplicates(subset=["bc_id", "short_name", "vlm_group_id"])
 
-    corpus = []
-    for idx, row in df.iterrows():
-        for col in settings.data_search_cols:
-            if pd.isna(row[col]) or len(str(row[col]).strip()) == 0:
-                continue
-            corpus.append({
-                "text": str(row[col]).strip(),
-                "metadata": {
-                    "index": idx,
-                    "colname": col,
-                },
-            })
-    corpus_text = [doc["text"] for doc in corpus]
-    corpus_tokens = bm25s.tokenize(corpus_text, stopwords="en", stemmer=stemmer)
-    retriever = bm25s.BM25(corpus=corpus)
-    retriever.index(corpus_tokens)
-    return retriever, df
+    specialization_df = specialization_df.select(
+        "bc_id", "short_name", "vlm_group_id"
+    ).unique()
+    df = (
+        specialization_df.join(bc_concepts, on=["bc_id"], how="left", suffix="_bc")
+        .unique()
+        .with_row_index(name="idx")
+    )
+    return df.collect()
 
 
 search_result_template = Template(
     """\
-{% for doc in docs -%}
-## {{ loop.index }}. {{ df.iloc[doc["metadata"]["index"]]["bc_id"] }}
-  {% for col in cols -%}
-  - {{ col }}: {{ df.iloc[doc["metadata"]["index"]][col] }}
+{% for item in data -%}
+## {{ loop.index }}. {{ item["vlm_group_id"] }}
+  {% for k, v in item.items() -%}
+  - {{ k }}: {{ v }}
   {% endfor %}
 {% endfor %}
 """
@@ -69,12 +56,28 @@ search_result_template = Template(
 
 class CdiscBcIndex:
     def __init__(self) -> None:
-        self.retriever, self.data = build_retriever()
+        self.data = build_data()
+        corpus = []
+        for row in self.data.rows(named=True):
+            for col in settings.data_search_cols:
+                if row[col] is None or len(str(row[col]).strip()) == 0:
+                    continue
+                corpus.append({
+                    "text": str(row[col]).strip(),
+                    "metadata": {
+                        "index": row["idx"],
+                        "colname": col,
+                    },
+                })
+        corpus_text = [doc["text"] for doc in corpus]
+        corpus_tokens = bm25s.tokenize(corpus_text, stopwords="en", stemmer=stemmer)
+        self.retriever = bm25s.BM25(corpus=corpus)
+        self.retriever.index(corpus_tokens)
 
     @overload
     def search(
         self, query: str, k: int = 10, return_formatted_string: Literal[False] = False
-    ) -> list[pd.Series]: ...
+    ) -> list[dict[str, Any]]: ...
     @overload
     def search(
         self, query: str, k: int = 10, return_formatted_string: Literal[True] = True
@@ -82,20 +85,38 @@ class CdiscBcIndex:
 
     def search(
         self, query: str, k: int = 10, return_formatted_string: bool = False
-    ) -> str | list[pd.Series]:
+    ) -> str | list[dict[str, Any]]:
         query_tokens = bm25s.tokenize(query, stopwords="en", stemmer=stemmer)
         results, _ = self.retriever.retrieve(query_tokens, k=k)
         if return_formatted_string:
             return self.format_search_results(results[0])
         else:
-            return [self.data.iloc[item["metadata"]["index"], :] for item in results[0]]
+            # return [self.data.iloc[item["metadata"]["index"], :] for item in results[0]]
+            return [
+                self.data.filter(pl.col("idx") == item["metadata"]["index"]).row(
+                    0, named=True
+                )
+                for item in results[0]
+            ]
 
     def format_search_results(self, docs: list[Document]) -> str:
         if len(docs) == 0:
             return "No relevant documents found."
+        cols = [
+            "vlm_group_id",
+            "short_name",
+            "bc_categories",
+            "synonyms",
+            "definition",
+        ]
+        data = [
+            self.data.filter(pl.col("idx") == doc["metadata"]["index"])
+            .select(*cols)
+            .row(0, named=True)
+            for doc in docs
+        ]
 
         return search_result_template.render(
             docs=docs,
-            df=self.data,
-            cols=["bc_id", "short_name", "bc_categories", "synonyms", "definition"],
+            data=data,
         )

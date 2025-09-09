@@ -12,7 +12,6 @@ dependencies = [
     "cyclopts>=3.23.0",
     "jinja2>=3.1.6",
     "openai>=1.101.0",
-    "pandas>=2.3.2",
     "polars>=1.33.0",
     "pydantic-settings>=2.10.1",
     "pystemmer>=3.0.0",
