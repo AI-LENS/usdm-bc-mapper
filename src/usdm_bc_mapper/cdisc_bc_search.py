@@ -20,7 +20,22 @@ class Document(TypedDict):
     metadata: DocumentMetadata
 
 
-def build_retriever(df: pd.DataFrame) -> bm25s.BM25:
+def build_retriever() -> tuple[bm25s.BM25, pd.DataFrame]:
+    df = pd.read_csv(settings.data_path / "cdisc_biomedical_concepts_latest.csv")
+    df = df.drop_duplicates(
+        subset=["bc_id", "short_name", "bc_categories", "synonyms", "definition"]
+    ).reset_index(drop=True)
+    specialization_df = pd.read_csv(
+        settings.data_path / "cdisc_sdtm_dataset_specializations_latest.csv"
+    )
+    specialization_df = (
+        specialization_df[["bc_id", "short_name", "vlm_group_id"]]
+        .drop_duplicates()
+        .reset_index(drop=True)
+    )
+    df = pd.merge(specialization_df, df, on="bc_id", how="left", suffixes=("", "_bc"))
+    df = df.drop_duplicates(subset=["bc_id", "short_name", "vlm_group_id"])
+
     corpus = []
     for idx, row in df.iterrows():
         for col in settings.data_search_cols:
@@ -37,7 +52,7 @@ def build_retriever(df: pd.DataFrame) -> bm25s.BM25:
     corpus_tokens = bm25s.tokenize(corpus_text, stopwords="en", stemmer=stemmer)
     retriever = bm25s.BM25(corpus=corpus)
     retriever.index(corpus_tokens)
-    return retriever
+    return retriever, df
 
 
 search_result_template = Template(
@@ -54,16 +69,12 @@ search_result_template = Template(
 
 class CdiscBcIndex:
     def __init__(self) -> None:
-        self.data = pd.read_csv(settings.data_path)
-        self.data = self.data.drop_duplicates(
-            subset=settings.data_search_cols
-        ).reset_index(drop=True)
-        self.retriever = build_retriever(self.data)
+        self.retriever, self.data = build_retriever()
 
     @overload
     def search(
         self, query: str, k: int = 10, return_formatted_string: Literal[False] = False
-    ) -> list[Document]: ...
+    ) -> list[pd.Series]: ...
     @overload
     def search(
         self, query: str, k: int = 10, return_formatted_string: Literal[True] = True
@@ -71,18 +82,20 @@ class CdiscBcIndex:
 
     def search(
         self, query: str, k: int = 10, return_formatted_string: bool = False
-    ) -> str | list[Document]:
+    ) -> str | list[pd.Series]:
         query_tokens = bm25s.tokenize(query, stopwords="en", stemmer=stemmer)
         results, _ = self.retriever.retrieve(query_tokens, k=k)
         if return_formatted_string:
             return self.format_search_results(results[0])
         else:
-            return results[0]
+            return [self.data.iloc[item["metadata"]["index"], :] for item in results[0]]
 
     def format_search_results(self, docs: list[Document]) -> str:
         if len(docs) == 0:
             return "No relevant documents found."
 
         return search_result_template.render(
-            docs=docs, df=self.data, cols=settings.data_search_cols
+            docs=docs,
+            df=self.data,
+            cols=["bc_id", "short_name", "bc_categories", "synonyms", "definition"],
         )
