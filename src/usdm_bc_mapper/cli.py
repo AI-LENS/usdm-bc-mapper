@@ -21,6 +21,10 @@ class CommonArgs:
     def __post_init__(self):
         if self.show_logs:
             logging.basicConfig(level=logging.DEBUG)
+            logging.getLogger("openai").setLevel(logging.CRITICAL + 1)
+            logging.getLogger("httpcore").setLevel(logging.CRITICAL + 1)
+            logging.getLogger("httpx").setLevel(logging.CRITICAL + 1)
+            logging.getLogger("bm25s").setLevel(logging.CRITICAL + 1)
         if self.config:
             yaml_config = YamlConfigSettingsSource(Settings, yaml_file=self.config)
             new_settings = Settings.model_validate(yaml_config())
@@ -30,8 +34,10 @@ class CommonArgs:
 cli = App()
 
 
-@cli.default
-async def usdm_bc_mapper(usdm_path: FilePath, *, _: CommonArgs | None = None):
+@cli.command(name="usdm")
+async def usdm_bc_mapper(
+    usdm_path: FilePath, output: str | None = None, *, _: CommonArgs | None = None
+):
     """Map biomedical concepts in a USDM (Unified Study Data Model) file.
 
     Args:
@@ -42,7 +48,7 @@ async def usdm_bc_mapper(usdm_path: FilePath, *, _: CommonArgs | None = None):
     usdm = Wrapper.model_validate_json(usdm_path.read_text(encoding="utf-8"))
     print("Study Name: ", usdm.study.name)
 
-    await map_biomedical_concepts(usdm)
+    await map_biomedical_concepts(usdm, output_file_name=output)
 
 
 @cli.command

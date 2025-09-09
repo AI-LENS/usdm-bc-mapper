@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, RootModel
 
 
 class Message(BaseModel):
@@ -20,7 +20,7 @@ class CdiscBcSearch(BaseModel):
 class FinalAnswer(BaseModel):
     type: Literal["FinalAnswer"] = "FinalAnswer"
     vlm_group_id: str
-    confidence: int = Field(..., ge=0, le=100)
+    confidence: int
 
 
 class NotFoundAnswer(BaseModel):

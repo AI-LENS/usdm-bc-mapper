@@ -1,6 +1,6 @@
 [project]
 name = "usdm-bc-mapper"
-version = "0.1.0"
+version = "0.2.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -15,6 +15,7 @@ dependencies = [
     "polars>=1.33.0",
     "pydantic-settings>=2.10.1",
     "pystemmer>=3.0.0",
+    "tqdm>=4.67.1",
     "usdm>=0.64.0",
 ]
 

@@ -923,6 +923,7 @@ dependencies = [
     { name = "polars" },
     { name = "pydantic-settings" },
     { name = "pystemmer" },
+    { name = "tqdm" },
     { name = "usdm" },
 ]
 
@@ -942,6 +943,7 @@ requires-dist = [
     { name = "polars", specifier = ">=1.33.0" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "pystemmer", specifier = ">=3.0.0" },
+    { name = "tqdm", specifier = ">=4.67.1" },
     { name = "usdm", specifier = ">=0.64.0" },
 ]
 
