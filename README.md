@@ -1,6 +1,6 @@
 # USDM Biomedical Concept Mapper
 
-A Python tool for automatically mapping activities in USDM (Unified Study Data Model) files to CDISC (Clinical Data Interchange Standards Consortium) biomedical concepts using AI-powered semantic search and LLM-based matching.
+A Python tool for automatically mapping activities in USDM (Unified Study Data Model) files to CDISC biomedical concepts using AI-powered semantic search and LLM-based matching.
 
 ## What does this project do?
 
