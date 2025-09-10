@@ -144,38 +144,7 @@ Add the `--show-logs` flag to any command to see detailed processing information
 bcm usdm path/to/file.json --config config.yaml --show-logs
 ```
 
-#### Configuration Options
 
-Your Configuration folder structure should look like this:
-
-```
-usdm-bc-mapper/
-└── dump/
-    └── test/
-        └──  config.yaml   # Configuration file
-
-```
-
-
-The following settings can be configured in your YAML config file:
-
-```yaml
-# AI Model Configuration
-openrouter_api_key: "your-api-key"
-openrouter_model: "openai/gpt-5" # or your preferred model
-openrouter_base_url: "https://openrouter.ai/api/v1" 
-openai_api_key: "your-api-key"
-openai_model: "gpt-4"  # Model to use
-openai_base_url: "https://api.openai.com/v1"  # API endpoint
-
-# Search Configuration
-max_ai_lookup_attempts: 7  # Max retries for AI lookup
-data_search_cols:  # Columns to search in CDISC data
-  - "short_name"
-  - "bc_categories" 
-  - "synonyms"
-  - "definition"
-```
 
 ### Example Workflow
 
