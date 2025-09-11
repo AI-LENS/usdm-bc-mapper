@@ -10,11 +10,9 @@ from .settings import settings
 
 
 async def llm[T: BaseModel](history: History, schema: Type[T]) -> T:
-    client = AsyncOpenAI(
-        base_url=settings.openai_base_url, api_key=settings.openai_api_key
-    )
+    client = AsyncOpenAI(base_url=settings.llm_base_url, api_key=settings.llm_api_key)
     response = await client.chat.completions.parse(
-        model=settings.openai_model,
+        model=settings.llm_model,
         messages=history.model_dump(),
         response_format=schema,
     )

@@ -13,9 +13,9 @@ project_root = Path(files("usdm_bc_mapper"))  # type:ignore
 
 
 class Settings(BaseSettings):
-    openai_api_key: str | None
-    openai_model: str = "openai/gpt-5-mini"
-    openai_base_url: str = "https://openrouter.ai/api/v1"
+    llm_api_key: str | None
+    llm_model: str = "openai/gpt-5-mini"
+    llm_base_url: str = "https://openrouter.ai/api/v1"
 
     data_path: DirectoryPath = project_root / "data"
     data_search_cols: list[str] = [

@@ -32,7 +32,7 @@ The [USDM Biomedical Concept Mapper](https://github.com/AI-LENS/usdm-bc-mapper) 
 ### Key Features
 
 - **Multiple Search Methods**: Supports both LLM-powered exact matching and local index searching
-- **Configurable AI Models**: Supports different OpenAI-compatible models
+- **Configurable AI Models**: Supports different commercial or open-source LLMs
 - **Command Line Interface**: Easy-to-use CLI for batch processing and individual concept searches
 
 ## Installation
@@ -40,7 +40,7 @@ The [USDM Biomedical Concept Mapper](https://github.com/AI-LENS/usdm-bc-mapper) 
 ### Prerequisites
 
 - Python 3.13 or higher
-- Access to OpenAI-compatible models
+- Access to LLM (commercial or open-source)
 
 ### Install from PyPI
 
@@ -59,8 +59,8 @@ pip install usdm-bc-mapper
 2. **Create a config file** (`config.yaml`) in your working directory:
 
    ```yaml
-   openai_api_key: "your-api-key-here"
-   openai_model: "gpt-5-mini"
+   llm_api_key: "your-api-key-here"
+   llm_model: "gpt-5-mini"
    ```
 
 3. **Run the mapper** on your USDM file:
@@ -83,11 +83,11 @@ Before using the tool, you need to configure your settings. Create a `config.yam
 
 ```yaml
 # config.yaml
-openai_api_key: "your-api-key-here"
-openai_model: "gpt-5-mini" # or your preferred model
+llm_api_key: "your-api-key-here"
+llm_model: "gpt-5-mini" # or your preferred model
 
 # Optional Configurations
-openai_base_url: "https://api.openai.com/v1" # or your custom endpoint
+llm_base_url: "https://api.openai.com/v1" # or your custom endpoint
 max_ai_lookup_attempts: 7 # max retries for AI lookup
 data_path: "path/to/cdisc/data" # path to CDISC data files and system prompt for LLMs
 data_search_cols: # columns to search in CDISC data
