@@ -1,6 +1,6 @@
 # USDM Biomedical Concept Mapper
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![License: MIT](https://img.shields.io/github/license/AI-LENS/usdm-bc-mapper)
 ![Python](https://img.shields.io/badge/python-3.13+-blue.svg)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
