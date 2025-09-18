@@ -42,7 +42,7 @@ async def find_biomedical_concept(concept: str):
         response = await llm(history, LLmResponse)
         if isinstance(response.decision, CdiscBcSearch):
             docs = bc_index.search(
-                response.decision.query, return_formatted_string=True
+                response.decision.query,k=response.decision.k, return_formatted_string=True
             )
             history.root.append(
                 Message.model_validate({"role": "user", "content": docs})
