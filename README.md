@@ -54,18 +54,24 @@ Our self-steering agent keeps the stack intentionally simple while delivering st
 
 ```mermaid
 %%{init: {'theme':'neutral', 'flowchart': {'htmlLabels': true, 'curve': 'basis', 'wrap': true}}}%%
-flowchart TB
+flowchart LR
     subgraph L1[Context & Retrieval]
-        direction LR
-        A["🧩 USDM Activity Context"] --> B["① Dynamic Retrieval<br/>🔍 bm25s + Polars index"] --> C{{"Top-K Concept Set"}}
+        direction TB
+        A["🧩 USDM Activity Context"]
+        B["① Dynamic Retrieval<br/>🔍 bm25s + Polars index"]
+        C{{"Top-K Concept Set"}}
+        A --> B --> C
     end
 
     subgraph L2[Reasoning & Delivery]
-        direction LR
-        D["② LLM Reasoning<br/>🤖 Commercial / open-source model"] --> E["③ USDM Mapping<br/>🛠️ SDK + deterministic writer"] --> F["📄 Downstream applications"]
+        direction TB
+        D["② LLM Reasoning<br/>🤖 Commercial / open-source model"]
+        E["③ USDM Mapping<br/>🛠️ SDK + deterministic writer"]
+        F["📄 Downstream applications"]
+        D --> E --> F
     end
 
-    C --> D
+    C -->|Grounded hand-off| D
 
     classDef context fill:#E1F5FE,stroke:#0277BD,color:#01579B,font-weight:bold;
     classDef process fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
