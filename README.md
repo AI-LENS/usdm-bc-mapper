@@ -152,7 +152,7 @@ data_search_cols: # columns to search in CDISC data
 
 ## AI SDK Compatibility
 
-The mapper speaks the OpenAI-compatible API spec, so you can bring your own provider. See `docs/ai_sdk_compatibility.md` for the full walkthrough; the quick-start presets are below.
+The mapper speaks the OpenAI-compatible API spec, so you can bring your own provider. See [docs/ai_sdk_compatibility.md](docs/ai_sdk_compatibility.md) for the full walkthrough; the quick-start presets are below.
 
 **Commercial APIs**
 
