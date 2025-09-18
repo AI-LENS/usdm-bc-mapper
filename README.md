@@ -16,6 +16,7 @@ USDM Biomedical Concept Mapper is purpose-built for clinical teams who need accu
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+- [AI SDK Compatibility](#ai-sdk-compatibility)
 - [Command Line Usage](#command-line-usage)
 - [Advanced Usage](#advanced-usage)
 - [Output Examples](#output-examples)
@@ -148,6 +149,36 @@ data_search_cols: # columns to search in CDISC data
   - "synonyms"
   - "definition"
 ```
+
+## AI SDK Compatibility
+
+The mapper speaks the OpenAI-compatible API spec, so you can bring your own provider. See `docs/ai_sdk_compatibility.md` for the full walkthrough; the quick-start presets are below.
+
+**Commercial APIs**
+
+```yaml
+llm_base_url: "https://api.openai.com/v1"
+llm_api_key: "sk-your-api-key"
+llm_model: "gpt-5-mini"
+```
+
+**Open-weight Aggregators**
+
+```yaml
+llm_base_url: "https://openrouter.ai/api/v1"
+llm_api_key: "sk-or-your-key"
+llm_model: "meta-llama/llama-3.1-8b-instruct:free"
+```
+
+**Self-hosted Runtimes**
+
+```yaml
+llm_base_url: "http://localhost:11434/v1"
+llm_api_key: "not-needed"
+llm_model: "phi4"
+```
+
+> Need hardware tips and server commands? Jump to `docs/ai_sdk_compatibility.md`.
 
 ### Command Line Usage
 
