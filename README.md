@@ -10,9 +10,9 @@ USDM Biomedical Concept Mapper is purpose-built for clinical teams who need accu
 
 ## Table of Contents
 
-- [Industry-First Advantage](#industry-first-advantage)
 - [What does this project do?](#what-does-this-project-do)
 - [Architecture Overview](#architecture-overview)
+- [Robust Design Principles](#robust-design-principles)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
@@ -21,17 +21,9 @@ USDM Biomedical Concept Mapper is purpose-built for clinical teams who need accu
 - [Advanced Usage](#advanced-usage)
 - [Output Examples](#output-examples)
 - [Development](#development)
-- [License](#license)
 - [Contributing](#contributing)
+- [License](#license)
 - [Support](#support)
-
-## Industry-First Advantage
-
-- **Only live solution** that operationalises USDM-to-CDISC concept mapping with configurable LLMs—enterprise APIs or local open-source models both work out of the box.
-- **Agentic intelligence with controls**: a transparent three-step loop that retrieves, reasons, and maps with auditable decision logs.
-- **Lean, production-friendly stack**: built on Polars, BM25 retrieval, and the official USDM SDK—no bespoke orchestration layers or opaque vendor lock-in.
-- **Tuned for regulatory speed**: delivers traceable mappings in minutes, accelerating CDISC Metadata driven vision.
-
 
 ## What does this project do?
 
@@ -89,6 +81,13 @@ flowchart TB
 
 **Why it works:** Retrieval keeps the LLM grounded, the reasoning step is model-agnostic, and the mapper uses CDISC-native schemas so teams get a fast, auditable pipeline without orchestrating multiple services.
 
+## Robust Design Principles
+
+- **Flexible LLM Integration**: Designed to work reliably with both enterprise APIs and local open-source models, providing teams with deployment flexibility and avoiding vendor lock-in.
+- **Transparent Processing Pipeline**: Features a clear three-step workflow (retrieve, reason, map) with comprehensive audit trails and explainable decision logs for regulatory compliance.
+- **Production-Ready Architecture**: Built on proven technologies including Polars for data processing, BM25 for retrieval, and the official USDM SDK—ensuring stability and maintainability.
+- **Reliable Performance**: Engineered for consistent, traceable mappings that support regulatory workflows and CDISC metadata requirements.
+
 ## Installation
 
 ### Prerequisites
@@ -129,9 +128,7 @@ pip install usdm-bc-mapper
    bcm usdm --help
    ```
 
-## How to use the tools
-
-### Configuration
+## Configuration
 
 Before using the tool, you need to configure your settings. Create a `config.yaml` file in your working directory (the same directory where your USDM JSON file is located):
 
@@ -181,7 +178,7 @@ llm_model: "phi4"
 
 > Need hardware tips and server commands? Jump to `docs/ai_sdk_compatibility.md`.
 
-### Command Line Usage
+## Command Line Usage
 
 The tool provides three main commands through the `bcm` CLI. Use `bcm --help` or `bcm <command> --help` to see detailed documentation for each command.
 
@@ -223,7 +220,7 @@ bcm search-bc-cdisc "blood pressure" --k 20 --config config.yaml
 
 **Note**: The main difference between `find-bc-cdisc` and `search-bc-cdisc` is that `find-bc-cdisc` uses an LLM to find exact matches, while `search-bc-cdisc` looks for matches in the local index.
 
-### Advanced Usage
+## Advanced Usage
 
 #### Enable Debug Logging
 
@@ -233,7 +230,7 @@ Add the `--show-logs` flag to any command to see detailed processing information
 bcm usdm path/to/file.json --config config.yaml --show-logs
 ```
 
-### Output Examples
+## Output Examples
 
 #### USDM Mapping Output
 
@@ -283,6 +280,10 @@ pre-commit run --all-files
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
 
 ## Support
 
