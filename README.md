@@ -53,25 +53,26 @@ The [USDM Biomedical Concept Mapper](https://github.com/AI-LENS/usdm-bc-mapper) 
 Our self-steering agent keeps the stack intentionally simple while delivering state-of-the-art accuracy. Every run goes through three explainable steps:
 
 ```mermaid
-%%{init: {'theme':'base', 'flowchart': {'htmlLabels': true, 'curve': 'basis', 'wrap': true}}}%%
-flowchart LR
-    A(["🧩 USDM Activity Context"]) --> B["① Dynamic Retrieval<br/>🔍 bm25s + Polars index"]
-    B --> C{{"Top-K Concept Set"}}
-    C --> D["② LLM Reasoning<br/>🤖 Commercial / Open-source model"]
-    D --> E["③ USDM Mapping<br/>🛠️ SDK + deterministic writer"]
-    E --> F(["📄 Downstream applications"])
+%%{init: {'theme':'neutral', 'flowchart': {'htmlLabels': true, 'curve': 'basis', 'wrap': true}}}%%
+flowchart TB
+    subgraph L1[Context & Retrieval]
+        direction LR
+        A["🧩 USDM Activity Context"] --> B["① Dynamic Retrieval<br/>🔍 bm25s + Polars index"] --> C{{"Top-K Concept Set"}}
+    end
 
-    %% Node Styling
-    classDef start fill:#E0F7FA,stroke:#00838F,stroke-width:2px,color:#004D40,font-weight:bold;
-    classDef process fill:#F1F8E9,stroke:#33691E,stroke-width:1.5px,color:#1B5E20;
-    classDef decision fill:#FFF3E0,stroke:#E65100,stroke-width:2px,color:#BF360C,font-weight:bold;
-    classDef output fill:#EDE7F6,stroke:#4527A0,stroke-width:2px,color:#311B92,font-weight:bold;
+    subgraph L2[Reasoning & Delivery]
+        direction LR
+        D["② LLM Reasoning<br/>🤖 Commercial / open-source model"] --> E["③ USDM Mapping<br/>🛠️ SDK + deterministic writer"] --> F["📄 Downstream applications"]
+    end
 
-    %% Edge Styling
-    linkStyle default stroke:#555,stroke-width:1.5px,fill:none,arrowhead:normal;
+    C --> D
 
-    %% Apply classes
-    class A start
+    classDef context fill:#E1F5FE,stroke:#0277BD,color:#01579B,font-weight:bold;
+    classDef process fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef decision fill:#FFF3E0,stroke:#EF6C00,color:#E65100,font-weight:bold;
+    classDef output fill:#EDE7F6,stroke:#512DA8,color:#311B92,font-weight:bold;
+
+    class A context
     class B,D,E process
     class C decision
     class F output
