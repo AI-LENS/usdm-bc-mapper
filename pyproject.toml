@@ -1,6 +1,6 @@
 [project]
 name = "usdm-bc-mapper"
-version = "0.3.1"
+version = "0.3.2"
 description = "A tool to convert activities into biomedical concepts"
 readme = "README.md"
 authors = [
