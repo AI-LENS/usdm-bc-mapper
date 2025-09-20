@@ -25,14 +25,14 @@ def build_data() -> pl.DataFrame:
         settings.data_path / "cdisc_biomedical_concepts_latest.csv"
     )
     bc_concepts = bc_concepts.select(
-        "bc_id", "short_name", "bc_categories", "synonyms", "definition"
+        "bc_id", "short_name", "bc_categories", "synonyms", "definition", "data_type"
     ).unique()
     specialization_df = pl.scan_csv(
         settings.data_path / "cdisc_sdtm_dataset_specializations_latest.csv"
     )
 
     specialization_df = specialization_df.select(
-        "bc_id", "short_name", "vlm_group_id"
+        "bc_id", "short_name", "vlm_group_id", "package_date"
     ).unique()
     df = (
         specialization_df.join(bc_concepts, on=["bc_id"], how="left", suffix="_bc")
