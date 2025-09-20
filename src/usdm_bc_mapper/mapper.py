@@ -42,7 +42,7 @@ async def map_biomedical_concepts(usdm: Wrapper, output_file_name: str | None = 
         for study_design in version.studyDesigns:
             logger.info(f"Study design activities: {len(study_design.activities)}")
 
-            for activity in tqdm(study_design.activities[:5]):
+            for activity in tqdm(study_design.activities):
                 logger.info(f"=== PROCESSING ACTIVITY: {activity.name} ({activity.label}) ===")
 
                 try:
