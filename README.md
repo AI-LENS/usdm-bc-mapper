@@ -201,7 +201,7 @@ bcm usdm path/to/your/usdm_file.json --output mapped_results.json --config confi
 Find CDISC match for a specific biomedical concept using LLM (provides exact matching):
 
 ```bash
-bcm find-bc-cdisc "diabetes mellitus" --config config.yaml
+bcm find-bc-cdisc "Systolic blood pressure" --config config.yaml
 ```
 
 #### 3. Search CDISC Biomedical Concepts
@@ -209,13 +209,13 @@ bcm find-bc-cdisc "diabetes mellitus" --config config.yaml
 Search the local CDISC index for matching concepts (searches local index without LLM):
 
 ```bash
-bcm search-bc-cdisc "blood pressure" --config config.yaml
+bcm search-bc-cdisc "adverse events" --config config.yaml
 ```
 
 Search with custom number of results:
 
 ```bash
-bcm search-bc-cdisc "blood pressure" --k 20 --config config.yaml
+bcm search-bc-cdisc "adverse events" --k 20 --config config.yaml
 ```
 
 **Note**: The main difference between `find-bc-cdisc` and `search-bc-cdisc` is that `find-bc-cdisc` uses an LLM to find exact matches, while `search-bc-cdisc` looks for matches in the local index.
